@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+    <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+        </script>
+</head>
+
+<body>
+    <main class="container">
+        <div class="p-4">
+            <h4 class="logo-text fw-bold mb-0">Dashboard</h4>
+        </div>
+
+        <div class="accordion accordion-flush" id="accordionFlushExample">
+
+            <!-- Certificados -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#flush-collapseCertificados" aria-expanded="false"
+                        aria-controls="flush-collapseCertificados">
+                        🧾 Certificados
+                    </button>
+                </h2>
+                <div id="flush-collapseCertificados" class="accordion-collapse collapse"
+                    data-bs-parent="#accordionFlushExample">
+                    <div class="d-flex flex-column p-2">
+                        <button class="btn" onclick="CadastrarCertificado()">✔ Adicionar Certificados</button>
+                        <button class="btn" onclick="ListarCertificados()">📘 Listar Certificados</button>
+                        <button class="btn">📘 Gerar Certificados Pendentes</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Cursos -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#flush-collapseCurso" aria-expanded="false" aria-controls="flush-collapseCurso">
+                        📚Cursos
+                    </button>
+                </h2>
+                <div id="flush-collapseCurso" class="accordion-collapse collapse"
+                    data-bs-parent="#accordionFlushExample">
+                    <div class="d-flex flex-column p-2">
+                        <button class="btn" onclick="CadastrarCursoTurma()">✔ Adicionar Curso</button>
+                        <button class="btn" onclick="ListarCursoTurma()">📘 Listar Cursos</button>
+                        <button class="btn" onclick="CadastrarPalestrante()">✔ Adicionar Palestrante</button>
+                        <button class="btn" onclick="ListarPalestrantes()">📘 Listar Palestrantes dos Cursos</button>
+                        <button class="btn" onclick="CadastrarConteudoProgramatico()">✔ Adicionar Conteúdo</button>
+                        <button class="btn" onclick="ListarConteudoProgramatico()">📘 Listar Conteúdo dos Cursos</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aluno -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#flush-collapseAluno" aria-expanded="false" aria-controls="flush-collapseAluno">
+                        👨‍🎓 Aluno
+                    </button>
+                </h2>
+                <div id="flush-collapseAluno" class="accordion-collapse collapse"
+                    data-bs-parent="#accordionFlushExample">
+                    <div class="d-flex flex-column p-2">
+                        <button class="btn" onclick="CadastrarAluno()">✔ Adicionar Aluno</button>
+                        <button class="btn" onclick="ListarAluno()">📘 Listar Alunos</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modelos -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#flush-collapseModelos" aria-expanded="false"
+                        aria-controls="flush-collapseModelos">
+                        📝 Modelos
+                    </button>
+                </h2>
+                <div id="flush-collapseModelos" class="accordion-collapse collapse"
+                    data-bs-parent="#accordionFlushExample">
+                    <div class="d-flex flex-column p-2">
+                        <button class="btn" onclick="CadastrarModeloCertificado()">✔ Adicionar Modelo</button>
+                        <button class="btn" onclick="ListarModelos()">📘 Listar Modelos</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+    <script>
+        function CadastrarCursoTurma() {
+            google.script.run.withSuccessHandler(function () {
+            }).FormCadastroCursoTurma()
+        }
+        function ListarCursoTurma() {
+            google.script.run.withSuccessHandler(function () {
+            }).FormListarCursoTurma()
+        }
+        function CadastrarPalestrante(){
+            google.script.run.withSuccessHandler(function () {
+            }).FormCadastrarPalestrante()
+        }
+        function ListarPalestrantes(){
+            google.script.run.withSuccessHandler(function () {
+            }).FormListarPalestrantes()
+        }
+        function CadastrarConteudoProgramatico(){
+            google.script.run.withSuccessHandler(function () {
+            }).FormCadastrarConteudoProgramatico()
+        }
+        function ListarConteudoProgramatico(){
+            google.script.run.withSuccessHandler(function () {
+            }).FormListarConteudosProgramaticos()
+        }
+        function CadastrarAluno() {
+            google.script.run.withSuccessHandler(function () {
+            }).FormCadastroAluno()
+        }
+        function ListarAluno() {
+            google.script.run.withSuccessHandler(function () {
+            }).FormListarAluno()
+        }
+        function CadastrarModeloCertificado() {
+            google.script.run.withSuccessHandler(function () {
+            }).FormCadastrarModeloCertificado()
+        }
+        function ListarModelos() {
+            google.script.run.withSuccessHandler(function () {
+            }).FormListarModelosCertificados()
+        }
+        function CadastrarCertificado() {
+            google.script.run.withSuccessHandler(function () {
+            }).FormCadastrarCertificado()
+        }
+        function ListarCertificados() {
+            google.script.run.withSuccessHandler().FormListarCertificados()
+        }
+        function GerarCertificadosPendentes(){
+            google.script.run.withSuccessHandler().GerarCertificados()
+        }
+    </script>
+</body>
+
+</html>

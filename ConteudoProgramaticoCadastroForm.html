@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.3/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/autofill/2.7.0/css/autoFill.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
+        </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"
+        integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous">
+        </script>
+    <script src="https://cdn.datatables.net/2.3.3/js/dataTables.min.js" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.datatables.net/autofill/2.7.0/js/dataTables.autoFill.min.js"
+        crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Atividade em andamento...</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div id="toast-body" class="toast-body">
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ModalCurso" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Buscar Curso</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="display nowrap" id="tableCurso">
+                        <thead>
+                            <tr>
+                                <th scope="col">IdCursoTurma</th>
+                                <th scope="col">CursoTurma</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                        onclick="SelecionarCurso()">Selecionar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <main class="container">
+        <form id="CadastroForm">
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Id</label>
+                <input type="text" class="form-control" id="Id" disabled>
+            </div>
+            <div class="" style="display: none;">
+                <label for="exampleFormControlInput1" class="form-label">IdCurso</label>
+                <input type="text" class="form-control" id="IdCursoTurma" required disabled>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="d-flex align-items-center">
+                        <div class="col mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Curso Completo</label>
+                            <input type="text" class="form-control" id="CursoTurma"  required  minlength="4"
+                                placeholder="Selecione o curso...">
+                        </div>
+                        <button type="button" class="btn text-center" data-bs-toggle="modal"
+                            data-bs-target="#ModalCurso">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-search" viewBox="0 0 16 16">
+                                <path
+                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="col">
+                    <label for="exampleFormControlInput1" class="form-label">Carga horária</label>
+                    <input type="number" class="form-control" id="CargaHoraria"
+                        placeholder="Informe a carga horária do curso" required>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Conteúdo</label>
+                <textarea class="form-control" id="Conteudo" rows="3" minlength="3" required></textarea>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+
+        </form>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+        </script>
+    <script>
+        var toastBody = document.getElementById('toast-body');
+        const toastLiveExample = document.getElementById('liveToast');
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+        let dataTableCurso = new DataTable('#tableCurso', {
+            scrollCollapse: true,
+            scroller: true,
+            scrollY: 200,
+            scrollX: true
+        });
+        var inputIdCurso = document.getElementById("IdCursoTurma");
+        const myModalCurso = document.getElementById('ModalCurso');
+        myModalCurso.addEventListener('shown.bs.modal', () => {
+            toastBootstrap.show()
+            toastBody.textContent = `Buscando cursos...`
+            google.script.run.withSuccessHandler(function (cursosTurma) {
+                cursosTurma = JSON.parse(cursosTurma);
+                cursosTurma = cursosTurma.map(cursoTurma => {
+                    return [
+                        cursoTurma.IdCursoTurma,
+                        cursoTurma.CursoTurma
+                    ]
+                });
+                dataTableCurso.clear();
+                dataTableCurso.rows.add(cursosTurma);
+                dataTableCurso.draw();
+                toastBootstrap.hide();
+            }).BuscarCursosTurma();
+        })
+        document.getElementById("CadastroForm").addEventListener('submit', (e) => {
+            e.preventDefault();
+            toastBootstrap.show()
+            toastBody.textContent = `Salvando conteúdo programático...`
+            SalvarConteudoProgramatico();
+        })
+        function SelecionarCurso() {
+            toastBootstrap.show()
+            toastBody.textContent = `Buscando curso...`
+            var idCurso = inputIdCurso.value;
+            if (idCurso) {
+                google.script.run.withSuccessHandler(function (cursoTurma) {
+                    cursoTurma = JSON.parse(cursoTurma);
+                    for (const [key, value] of Object.entries(cursoTurma)) {
+                        if (key == "IdCursoTurma" || key == "CursoTurma") {
+                            document.getElementById(key).value = value;
+                        }
+
+                    }
+                    toastBootstrap.hide();
+                }).BuscarCursoTurma(idCurso)
+            }
+        }
+        function SalvarConteudoProgramatico() {
+            var conteudoProgramatico = {};
+            var inputs = document.querySelectorAll(".form-control");
+            inputs.forEach((item) => {
+                conteudoProgramatico[item.id] = item.value
+            });
+            conteudoProgramatico = JSON.stringify(conteudoProgramatico)
+            google.script.run.withSuccessHandler(function (retorno) {
+                toastBody.textContent = retorno;
+                google.script.run.withSuccessHandler().FormListarConteudosProgramaticos();
+            }).SalvarConteudoProgramatico(conteudoProgramatico)
+        }
+        document.addEventListener("DOMContentLoaded", () => {
+            if (document.getElementById("ConteudoProgramaticoEdit") != null) {
+                var conteudoProgramaticoEdit = document.getElementById("ConteudoProgramaticoEdit").innerText;
+                conteudoProgramaticoEdit = parseInt(conteudoProgramaticoEdit);
+                google.script.run.withSuccessHandler(function (conteudoProgramatico) {
+                    conteudoProgramatico = JSON.parse(conteudoProgramatico)
+                    for (const [key, value] of Object.entries(conteudoProgramatico)) {
+                        document.getElementById(key).value = value;
+                    }
+                }).BuscarConteudoProgramatico(conteudoProgramaticoEdit)
+            }
+        })
+        $('#tableCurso tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                dataTableCurso.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+
+            let row = dataTableCurso.row(this).data();
+            inputIdCurso.value = row[0];
+        });
+    </script>
+</body>
+
+</html>

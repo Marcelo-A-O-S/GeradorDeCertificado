@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.3/css/dataTables.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/autofill/2.7.0/css/autoFill.dataTables.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
+    </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"
+    integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous">
+    </script>
+  <script src="https://cdn.datatables.net/2.3.3/js/dataTables.min.js" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.datatables.net/autofill/2.7.0/js/dataTables.autoFill.min.js"
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto">Atividade em andamento...</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div id="toast-body" class="toast-body">
+      </div>
+    </div>
+  </div>
+  <main class="">
+    <div class="d-flex justify-content-start ">
+      <button type="button" class="btn btn-primary" onclick="CadastrarModeloCertificado()">Cadastrar Modelo</button>
+    </div>
+    <table class="display nowrap" id="table">
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Modelo</th>
+          <th scope="col">Pasta Armazenada</th>
+          <th scope="col">Id Curso</th>
+          <th scope="col">Curso - Turma</th>
+          <th scope="col">Ações</th>
+          <!-- IdModeloCertificado	IdModelo	IdPasta	Modelo	PastaArmazenada	NomeCurso -->
+        </tr>
+      </thead>
+    </table>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+    </script>
+  <script>
+    var toastBody = document.getElementById('toast-body');
+    const toastLiveExample = document.getElementById('liveToast');
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+    let datatable = new DataTable('#table', {
+      scrollCollapse: true,
+      scroller: true,
+      scrollY: 200,
+      scrollX: true
+    });
+    function CarregarDataTable(modelosCertificado) {
+      modelosCertificado = CarregarLista(modelosCertificado);
+      datatable.clear();
+      datatable.rows.add(modelosCertificado);
+      datatable.draw();
+    }
+    function CarregarLista(modelosCertificado) {
+      modelosCertificado = modelosCertificado.map(modeloCertificado => {
+        return [
+          modeloCertificado.IdModeloCertificado,
+          modeloCertificado.Modelo,
+          modeloCertificado.PastaArmazenada,
+          modeloCertificado.IdCursoTurma,
+          modeloCertificado.CursoTurma,
+          `<a href="https://drive.google.com/drive/folders/${modeloCertificado.IdPasta}" target="_blank" class="btn btn-warning btn-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder" viewBox="0 0 16 16">
+                <path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a2 2 0 0 1 .342-1.31zM2.19 4a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zm4.69-1.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139q.323-.119.684-.12h5.396z"/>
+              </svg>
+              Abrir Pasta
+            </a>
+            <a href="https://docs.google.com/document/d/${modeloCertificado.IdModelo}" target="_blank"  class="btn btn-info btn-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark" viewBox="0 0 16 16">
+                <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
+              </svg>
+              Ver modelo
+            </a>
+            <button class="btn btn-danger btn-sm" onclick="EditarModeloCertificado(${modeloCertificado.IdModeloCertificado})">Editar</button>
+          <button class="btn btn-primary btn-sm" onclick="DeletarModeloCertificado(${modeloCertificado.IdModeloCertificado})">Deletar</button>`
+
+        ]
+      })
+      return modelosCertificado
+    }
+    function CadastrarModeloCertificado() {
+      toastBootstrap.show()
+      toastBody.textContent = `Criando novo modelo...`
+      google.script.run.withSuccessHandler(function () {
+      }).FormCadastrarModeloCertificado()
+    }
+    function EditarModeloCertificado(IdModeloCertificado) {
+      toastBootstrap.show()
+      toastBody.textContent = `Editando modelo...`
+      google.script.run.withSuccessHandler(function (retorno) {
+        alert(retorno);
+        google.script.run.withSuccessHandler(function (modelosCertificado) {
+          modelosCertificado = JSON.parse(modelosCertificado);
+          CarregarDataTable(modelosCertificado);
+        }).BuscarModelosCertificado();
+      }).FormCadastrarModeloCertificado(IdModeloCertificado)
+    }
+    function DeletarModeloCertificado(IdModeloCertificado) {
+      toastBootstrap.show()
+      toastBody.textContent = `Deletando modelo...`
+      google.script.run.withSuccessHandler(function (retorno) {
+        toastBody.textContent = retorno;
+        google.script.run.withSuccessHandler(function (modelosCertificado) {
+          modelosCertificado = JSON.parse(modelosCertificado);
+          CarregarDataTable(modelosCertificado);
+        }).BuscarModelosCertificado();
+      }).DeletarModeloCertificado(IdModeloCertificado)
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+      toastBootstrap.show()
+      toastBody.textContent = `Buscando modelos...`
+      google.script.run.withSuccessHandler(function (modelosCertificado) {
+        modelosCertificado = JSON.parse(modelosCertificado);
+        CarregarDataTable(modelosCertificado);
+        toastBootstrap.hide();
+      }).BuscarModelosCertificado()
+    })
+  </script>
+</body>
+
+</html>

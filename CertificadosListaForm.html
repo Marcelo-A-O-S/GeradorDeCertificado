@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.3/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/autofill/2.7.0/css/autoFill.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
+        </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"
+        integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous">
+        </script>
+    <script src="https://cdn.datatables.net/2.3.3/js/dataTables.min.js" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.datatables.net/autofill/2.7.0/js/dataTables.autoFill.min.js"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Atividade em andamento...</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div id="toast-body" class="toast-body">
+            </div>
+        </div>
+    </div>
+    <main class="">
+        <div class="d-flex justify-content-start ">
+            <button type="button" class="btn btn-primary" onclick="CadastrarCertificado()">Registrar
+                certificado</button>
+        </div>
+        <table class="display nowrap" id="table">
+            <thead>
+                <tr>
+                    <th scope="col">IdCertificado</th>
+                    <th scope="col">Código</th>
+                    <th scope="col">Curso Turma</th>
+                    <th scope="col">ChCurso</th>
+                    <th scope="col">DtInicio</th>
+                    <th scope="col">DtFim</th>
+                    <th scope="col">Nome Aluno</th>
+                    <th scope="col">Cpf</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Ações</th>
+                    <!-- IdCertificado	IdCursoTurma	CursoTurma	Curso	ChCurso	DtInicio	DtFim	DataExtenso	IdAluno	Nome	Cpf	Email	Whatsapp	IdModeloCertificado	Modelo	PastaArmazenada	DtEmissao	Status	Certificado	Qrcode	Envio	DataEnvio -->
+                </tr>
+            </thead>
+        </table>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+        </script>
+    <script>
+        let datatable = new DataTable('#table', {
+            scrollCollapse: true,
+            scroller: true,
+            scrollY: 200,
+            scrollX: true
+        });
+        var toastBody = document.getElementById('toast-body');
+        const toastLiveExample = document.getElementById('liveToast');
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+        function EnviarPorEmail(idCertificado) {
+            toastBootstrap.show();
+            toastBody.textContent = "Enviando email...."
+            google.script.run.withSuccessHandler(function (retorno) {
+                toastBody.textContent = retorno;
+            }).EnviarCertificadoPorEmail(idCertificado);
+        }
+        function CarregarDataTable(certificados) {
+            certificados = CarregarLista(certificados)
+            datatable.clear();
+            datatable.rows.add(certificados);
+            datatable.draw();
+        }
+        function EditarCertificado(idCertificado) {
+            toastBootstrap.show()
+            toastBody.textContent = "Editando registro de certificado...."
+            google.script.run.withSuccessHandler(function () {
+            }).FormCadastrarCertificado(idCertificado)
+        }
+        function GerarCertificado(idCertificado) {
+            toastBootstrap.show()
+            toastBody.textContent = "Gerando certificado...."
+            google.script.run.withSuccessHandler(function (retorno) {
+                toastBody.textContent = retorno;
+                google.script.run.withSuccessHandler(function (certificados) {
+                    certificados = JSON.parse(certificados);
+                    CarregarDataTable(certificados)
+                }).BuscarCertificados()
+            }).GerarCertificado(idCertificado);
+        }
+        function DeletarCertificado(idCertificado) {
+            toastBootstrap.show()
+            toastBody.textContent = "Deletando certificado...."
+            google.script.run.withSuccessHandler(function (retorno) {
+                toastBody.textContent = retorno;
+                google.script.run.withSuccessHandler(function (certificados) {
+                    certificados = JSON.parse(certificados);
+                    CarregarDataTable(certificados)
+                }).BuscarCertificados()
+            }).DeletarCertificado(idCertificado)
+        }
+        function CadastrarCertificado() {
+            toastBootstrap.show()
+            toastBody.textContent = "Cadastrando registro de certificado...."
+            google.script.run.withSuccessHandler(function () {
+            }).FormCadastrarCertificado()
+        }
+        function CarregarLista(certificados) {
+            certificados = certificados.map(certificado => {
+                let DtInicio = new Date(certificado.DtInicio).toLocaleDateString('pt-BR');
+                let DtFim = new Date(certificado.DtFim).toLocaleDateString('pt-BR');
+                return [
+                    certificado.IdCertificado,
+                    certificado.Codigo,
+                    certificado.CursoTurma,
+                    certificado.ChCurso,
+                    DtInicio,
+                    DtFim,
+                    certificado.Nome,
+                    certificado.Cpf,
+                    certificado.Status,
+                    `
+                        ${certificado.Certificado != "" ? `<a href=${certificado.Certificado} target="_blank"  class="btn btn-primary btn-sm" >Ver certificado</a> ` : ""}
+                        ${certificado.Certificado != "" && certificado.Codigo != "" ? `<button class="btn btn-primary btn-sm" onclick="EnviarPorEmail(${certificado.IdCertificado})">Enviar por Email</button> ` : ""}
+                        <button class="btn btn-primary btn-sm" onclick="GerarCertificado(${certificado.IdCertificado})">Gerar</button>
+                        <button class="btn btn-primary btn-sm" onclick="EditarCertificado(${certificado.IdCertificado})">Editar</button>
+                        <button class="btn btn-danger btn-sm" onclick="DeletarCertificado(${certificado.IdCertificado})">Deletar</button>`
+
+                ]
+            })
+            return certificados;
+        }
+        document.addEventListener("DOMContentLoaded", () => {
+            toastBootstrap.show()
+            toastBody.textContent = "Buscando registros de certificados...."
+            google.script.run.withSuccessHandler(function (certificados) {
+                certificados = JSON.parse(certificados);
+                CarregarDataTable(certificados);
+                toastBootstrap.hide();
+            }).BuscarCertificados()
+        })
+    </script>
+</body>
+
+</html>

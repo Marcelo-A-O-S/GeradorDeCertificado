@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.3/css/dataTables.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/autofill/2.7.0/css/autoFill.dataTables.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
+    </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"
+    integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous">
+    </script>
+  <script src="https://cdn.datatables.net/2.3.3/js/dataTables.min.js" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.datatables.net/autofill/2.7.0/js/dataTables.autoFill.min.js"
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto">Atividade em andamento...</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div id="toast-body" class="toast-body">
+      </div>
+    </div>
+  </div>
+  <main class="">
+    <div class="d-flex justify-content-start ">
+      <button type="button" class="btn btn-primary" onclick="CadastrarCursoTurma()">Cadastrar Curso turma</button>
+    </div>
+    <table class="display nowrap" id="table">
+      <thead>
+        <tr>
+          <th scope="col">Id Curso</th>
+          <th scope="col">Curso e Turma</th>
+          <th scope="col">Curso</th>
+          <th scope="col">Data de inicio</th>
+          <th scope="col">Data final</th>
+          <th scope="col">Ações</th>
+          <!-- CursoTurma	Curso	DtInicio	DtFim	DataExtenso	ChCurso -->
+        </tr>
+      </thead>
+    </table>
+
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+    </script>
+  <script>
+    var toastBody = document.getElementById('toast-body');
+    const toastLiveExample = document.getElementById('liveToast');
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+    let datatable = new DataTable('#table', {
+      scrollCollapse: true,
+      scroller: true,
+      scrollY: 200,
+      scrollX: true
+    });
+    function CarregarDataTable(cursosTurma) {
+      cursosTurma = CarregarLista(cursosTurma)
+      datatable.clear();
+      datatable.rows.add(cursosTurma);
+      datatable.draw();
+    }
+    function CadastrarCursoTurma() {
+      toastBootstrap.show()
+      toastBody.textContent = `Criando curso...`
+      google.script.run.withSuccessHandler(function () {
+      }).FormCadastroCursoTurma()
+    }
+    function EditarCursoTurma(IdCursoTuma) {
+      toastBootstrap.show()
+      toastBody.textContent = `Editando curso...`
+      google.script.run.withSuccessHandler(function (retorno) {
+        toastBody.textContent = retorno;
+        google.script.run.withSuccessHandler(function (cursosTurma) {
+          cursosTurma = JSON.parse(cursosTurma);
+          CarregarDataTable(cursoTurma)
+          toastBootstrap.hide()
+        }).BuscarCursosTurma()
+      }).FormCadastroCursoTurma(IdCursoTuma)
+    }
+    function DeletarCursoTurma(IdCursoTuma) {
+      toastBootstrap.show()
+      toastBody.textContent = `Deletando curso...`
+      google.script.run.withSuccessHandler(function (retorno) {
+        toastBody.textContent = retorno
+        google.script.run.withSuccessHandler(function (cursosTurma) {
+          cursosTurma = JSON.parse(cursosTurma);
+          CarregarDataTable(cursosTurma)
+          toastBootstrap.hide()
+        }).BuscarCursosTurma()
+      }).DeletarCursoTurma(IdCursoTuma)
+    }
+    function CarregarLista(cursosTurma) {
+      return cursosTurma.map(cursoTurma => {
+        let inicio = new Date(cursoTurma.DtInicio);
+        let fim = new Date(cursoTurma.DtFim);
+        let inicioFormatado = inicio.toLocaleDateString('pt-BR');
+        let fimFormatado = fim.toLocaleDateString('pt-BR');
+        return [
+          cursoTurma.IdCursoTurma,
+          cursoTurma.CursoTurma,
+          cursoTurma.Curso,
+          inicioFormatado,
+          fimFormatado,
+          `<button class="btn btn-danger btn-sm" onclick="EditarCursoTurma(${cursoTurma.IdCursoTurma})">Editar</button>
+          <button class="btn btn-primary btn-sm" onclick="DeletarCursoTurma(${cursoTurma.IdCursoTurma})">Deletar</button>`
+
+        ]
+      })
+
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+      toastBootstrap.show()
+      toastBody.textContent = `Buscando cursos...`
+      google.script.run.withSuccessHandler(function (cursosTurma) {
+        cursosTurma = JSON.parse(cursosTurma);
+        CarregarDataTable(cursosTurma);
+        toastBootstrap.hide();
+      }).BuscarCursosTurma()
+    })
+  </script>
+</body>
+
+</html>

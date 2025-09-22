@@ -1,0 +1,24 @@
+<script>
+    function buscar() {
+      const codigo = document.getElementById("codigo").value.trim();
+      if (!codigo) {
+        alert("Por favor, informe um código.");
+        return;
+      }
+
+      google.script.run.withSuccessHandler(function (data) {
+        data = JSON.parse(data);
+        const resultado = document.getElementById("resultado");
+        if (!data || !data.Certificado) {
+          resultado.innerHTML = "<p style='color:red;'>Certificado não encontrado.</p>";
+        } else {
+          resultado.innerHTML = `
+        <p><b>Nome:</b> ${data.Nome}</p>
+        <p><b>Curso:</b> ${data.Curso}</p>
+        <p><b>Data de emissão:</b> ${data.DtEmissao}</p>
+        <p><a href="${data.Certificado}" target="_blank">📄 Ver Certificado</a></p>
+      `;
+        }
+      }).BuscarCertificadoPorCodigo(codigo);
+    }
+  </script>

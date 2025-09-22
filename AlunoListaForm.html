@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.3/css/dataTables.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/autofill/2.7.0/css/autoFill.dataTables.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
+    </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"
+    integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous">
+    </script>
+  <script src="https://cdn.datatables.net/2.3.3/js/dataTables.min.js" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.datatables.net/autofill/2.7.0/js/dataTables.autoFill.min.js"
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto">Atividade em andamento...</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div id="toast-body" class="toast-body">
+      </div>
+    </div>
+  </div>
+  <main class="">
+    <div class="d-flex justify-content-start ">
+      <button type="button" class="btn btn-primary" onclick="CadastrarAluno()">Cadastrar Aluno</button>
+    </div>
+    <table class="display nowrap" id="table">
+      <thead>
+        <tr>
+          <th scope="col">Id Aluno</th>
+          <th scope="col">Nome</th>
+          <th scope="col">Email</th>
+          <th scope="col">Cpf</th>
+          <th scope="col">Whatsapp</th>
+          <th scope="col">Gênero</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+    </table>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+    </script>
+  <script>
+    var toastBody = document.getElementById('toast-body');
+    const toastLiveExample = document.getElementById('liveToast');
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+    let datatable = new DataTable('#table', {
+      scrollCollapse: true,
+      scroller: true,
+      scrollY: 200,
+      scrollX: true
+    });
+    function CarregarDataTable(alunos) {
+      alunos = CarregarLista(alunos)
+      datatable.clear();
+      datatable.rows.add(alunos);
+      datatable.draw();
+    }
+    function CarregarLista(alunos) {
+      return alunos.map(aluno => [
+        aluno.IdAluno,
+        aluno.Nome,
+        aluno.Email,
+        aluno.Cpf,
+        aluno.Whatsapp,
+        aluno.Genero,
+        `<button class="btn btn-danger btn-sm" onclick="EditarAluno(${aluno.IdAluno})">Editar</button>
+          <button class="btn btn-primary btn-sm" onclick="DeletarAluno(${aluno.IdAluno})">Deletar</button>`
+      ]);
+    }
+    function CadastrarAluno() {
+      toastBootstrap.show()
+      toastBody.textContent = `Abrindo formulário de cadastro...`
+      google.script.run.withSuccessHandler(function () {
+      }).FormCadastroAluno()
+    }
+    function EditarAluno(IdAluno) {
+      toastBootstrap.show()
+      toastBody.textContent = `Editando aluno...`
+      google.script.run.withSuccessHandler(function (retorno) {
+        alert(retorno);
+        google.script.run.withSuccessHandler(function (alunos) {
+          alunos = JSON.parse(alunos);
+          CarregarDataTable(alunos)
+        }).BuscarAlunos()
+      }).FormCadastroAluno(IdAluno)
+    }
+    function DeletarAluno(IdAluno) {
+      toastBootstrap.show()
+      toastBody.textContent = `Deletando aluno...`
+      google.script.run.withSuccessHandler(function (retorno) {
+        toastBody.textContent = retorno;
+        google.script.run.withSuccessHandler(function (alunos) {
+          alunos = JSON.parse(alunos);
+          CarregarDataTable(alunos)
+        }).BuscarAlunos()
+      }).DeletarAluno(IdAluno)
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+      toastBootstrap.show()
+      toastBody.textContent = `Buscando alunos...`
+      google.script.run.withSuccessHandler(function (alunos) {
+        alunos = JSON.parse(alunos);
+        CarregarDataTable(alunos)
+        toastBootstrap.hide();
+      }).BuscarAlunos()
+    })
+  </script>
+</body>
+
+</html>
