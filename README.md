@@ -2,8 +2,10 @@
 
 Este projeto foi desenvolvido com o intuito de **facilitar o processo de criação de certificados de cursos** a partir de dados em **Google Sheets**.  
 Além de gerar os certificados automaticamente, ele também permite:  
-- **Envio por e-mail** diretamente aos participantes;  
-- **Integração com Google Sites** para disponibilizar a busca e o download dos certificados de forma prática;  
+- **Envio por e-mail** diretamente aos participantes;
+- **Integração com Google Sites** para disponibilizar a busca e o download dos certificados de forma prática;
+- **Geração de Qrcode** para validação de certificação;  
+- **Armazenamento de certificações** diretamente no **Google Drive**;
 - Aproveitar o ecossistema do **Google Workspace** para manter tudo centralizado e seguro.
 
 ---
@@ -12,7 +14,8 @@ Além de gerar os certificados automaticamente, ele também permite:
 
 - **Google Apps Script** → Automação da lógica de geração dos certificados  
 - **Google Sheets** → Base de dados com informações dos alunos e cursos  
-- **Google Sites** → Disponibilização da busca e verificação dos certificados  
+- **Google Sites** → Disponibilização da busca e verificação dos certificados
+- **Google Drive** → Para gerenciar pastas e o armazenamento dos certificados
 - **Clasp (Command Line Apps Script Projects)** → Controle de versão e integração local com o Apps Script  
 
 ---
